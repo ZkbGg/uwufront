@@ -1,0 +1,60 @@
+.buscador-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #fff0f5;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Comic Neue', cursive, sans-serif;
+  }
+  
+  .buscador-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ffc0cb;
+    margin-bottom: 20px;
+    outline: none;
+  }
+  
+  .buscador-results {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .persona-result {
+    padding: 10px;
+    border-bottom: 1px solid #f3c1d7;
+    color: #333;
+  }
+  
+  .persona-result:last-child {
+    border-bottom: none;
+  }
+  
+  .no-result {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+  }
+  .buscador-btn {
+    background: linear-gradient(to right, #ff8acb, #ffd3f8);
+    border: none;
+    color: #5a005a;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(255, 192, 203, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .buscador-btn:hover {
+    background: linear-gradient(to right, #ff6bb5, #ffc3f0);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(255, 182, 193, 0.6);
+  }
+  

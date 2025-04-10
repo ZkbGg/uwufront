@@ -1,0 +1,117 @@
+/* ===================================================
+   GLOBAL RESPONSIVE STYLES - responsive.css
+   Aplica estilos adaptables a diferentes tamaños de pantalla.
+   =================================================== */
+
+/* 🔹 Teléfonos móviles (hasta 600px) */
+@media only screen and (max-width: 600px) {
+    .container {
+      padding: 16px;
+    }
+  
+    .card {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+  
+    .header {
+      padding: 16px;
+      font-size: 24px;
+    }
+  
+    .icon {
+      font-size: 36px;
+    }
+  
+    .form {
+      padding: 16px;
+    }
+  
+    .input {
+      padding: 10px 10px 10px 36px;
+      font-size: 14px;
+    }
+  
+    .button {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    .footer {
+      font-size: 12px;
+    }
+  }
+  
+  /* 🔸 Teléfonos muy pequeños (hasta 400px) */
+  @media only screen and (max-width: 400px) {
+    .header {
+      font-size: 20px;
+    }
+  
+    .form-group label {
+      font-size: 12px;
+    }
+  
+    .input {
+      padding: 8px 8px 8px 32px;
+      font-size: 12px;
+    }
+  
+    .input-icon {
+      font-size: 14px;
+      left: 10px;
+    }
+  
+    .button {
+      padding: 8px;
+      font-size: 12px;
+    }
+  
+    .footer {
+      font-size: 10px;
+    }
+  }
+  
+  /* 🟡 Tablets (mínimo 768px) */
+  @media only screen and (min-width: 768px) {
+    .card {
+      max-width: 420px;
+    }
+  }
+  
+  /* 🌀 Orientación vertical */
+  @media screen and (orientation: portrait) {
+    .background-pattern {
+      background-size: 80px 80px;
+    }
+  }
+  
+  /* 🧱 Orientación horizontal (pantallas bajas) */
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .login-container {
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+  
+    .icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+  
+    .form {
+      padding: 12px;
+    }
+  
+    .form-group {
+      margin-bottom: 10px;
+    }
+  }
+  
+  /* 📱 Alta densidad (retina) */
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+         only screen and (min-resolution: 192dpi) {
+    .background-pattern {
+      background-size: 120px 120px;
+    }
+  }
+  

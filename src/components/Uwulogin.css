@@ -1,0 +1,275 @@
+/* UwU Café Login Styles con diseño responsive */
+.uwu-login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f7c3e0;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+  
+  .uwu-background-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='%23ec4899'%3EUwU%3C/text%3E%3C/svg%3E"),
+                      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Cpath d='M30,50 Q50,30 70,50 Q50,70 30,50 Z' stroke='%23ec4899' fill='%23ec4899'/%3E%3C/svg%3E"),
+                      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='30' r='15' stroke='%23ec4899' stroke-width='2' fill='none'/%3E%3Ccircle cx='40' cy='40' r='5' fill='%23ec4899'/%3E%3Ccircle cx='60' cy='40' r='5' fill='%23ec4899'/%3E%3Cpath d='M40,50 Q50,60 60,50' stroke='%23ec4899' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    z-index: 0;
+  }
+  
+  .uwu-login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .uwu-header {
+    background-color: #ec4899;
+    color: white;
+    padding: 24px;
+    text-align: center;
+  }
+  
+  .uwu-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+  
+  .uwu-header h1 {
+    margin: 0 0 4px 0;
+    font-size: 28px;
+  }
+  
+  .uwu-header p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 14px;
+  }
+  
+  .uwu-form {
+    padding: 24px;
+  }
+  
+  .uwu-form-group {
+    margin-bottom: 20px;
+  }
+  
+  .uwu-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b5563;
+  }
+  
+  .uwu-input-container {
+    position: relative;
+  }
+  
+  .uwu-input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ec4899;
+    font-size: 16px;
+  }
+  
+  .uwu-input-container input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #fbcfe8;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-sizing: border-box;
+  }
+  
+  .uwu-input-container input:focus {
+    outline: none;
+    border-color: #ec4899;
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+  }
+  
+  .uwu-error {
+    background-color: #fef2f2;
+    color: #ef4444;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  .uwu-submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    background-color: #ec4899;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .uwu-submit-button:hover {
+    background-color: #db2777;
+  }
+  
+  .uwu-button-icon {
+    margin-right: 8px;
+  }
+  
+  .uwu-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    color: #6b7280;
+    font-size: 12px;
+  }
+  
+  .uwu-heart-icon {
+    color: #eb2b8b;
+    margin-right: 6px;
+    font-size: 14px;
+  }
+  
+  /* Media queries para responsividad */
+  
+  /* Dispositivos pequeños (teléfonos móviles, 600px y menos) */
+  @media only screen and (max-width: 600px) {
+    .uwu-login-card {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    
+    .uwu-header {
+      padding: 16px;
+    }
+    
+    .uwu-icon {
+      font-size: 36px;
+    }
+    
+    .uwu-header h1 {
+      font-size: 24px;
+    }
+    
+    .uwu-form {
+      padding: 16px;
+    }
+    
+    .uwu-input-container input {
+      padding: 10px 10px 10px 36px;
+      font-size: 14px;
+    }
+    
+    .uwu-submit-button {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
+  /* Dispositivos muy pequeños (teléfonos móviles pequeños, 400px y menos) */
+  @media only screen and (max-width: 400px) {
+    .uwu-header h1 {
+      font-size: 20px;
+    }
+    
+    .uwu-header p {
+      font-size: 12px;
+    }
+    
+    .uwu-form-group label {
+      font-size: 12px;
+    }
+    
+    .uwu-input-container input {
+      padding: 8px 8px 8px 32px;
+      font-size: 12px;
+    }
+    
+    .uwu-input-icon {
+      font-size: 14px;
+      left: 10px;
+    }
+    
+    .uwu-submit-button {
+      padding: 8px;
+      font-size: 12px;
+    }
+    
+    .uwu-footer {
+      font-size: 10px;
+    }
+    
+    .uwu-heart-icon {
+      font-size: 12px;
+    }
+  }
+  
+  /* Para dispositivos de pantalla mediana (tablets, 768px y más) */
+  @media only screen and (min-width: 768px) {
+    .uwu-login-card {
+      max-width: 420px;
+    }
+  }
+  
+  /* Para dispositivos con orientación vertical */
+  @media screen and (orientation: portrait) {
+    .uwu-background-pattern {
+      background-size: 80px 80px;
+    }
+  }
+  
+  /* Para dispositivos con orientación horizontal */
+  @media screen and (orientation: landscape) and (max-height: 500px) {
+    .uwu-login-container {
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+    
+    .uwu-header {
+      padding: 12px;
+    }
+    
+    .uwu-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+    
+    .uwu-form {
+      padding: 12px;
+    }
+    
+    .uwu-form-group {
+      margin-bottom: 10px;
+    }
+  }
+  
+  /* Para pantallas de alta densidad (retina) */
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+         only screen and (min-resolution: 192dpi) {
+    .uwu-background-pattern {
+      background-size: 120px 120px;
+    }
+  }

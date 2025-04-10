@@ -1,0 +1,105 @@
+/* Dashboard.css */
+.dashboard {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff0f5; /* Fondo rosita claro */
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    font-family: 'Comic Neue', cursive, sans-serif;
+    text-align: center;
+  }
+  
+  .dashboard h1 {
+    font-size: 2.5rem;
+    color: #ff69b4;
+    margin-bottom: 20px;
+  }
+  
+  .user-info {
+    background-color: #fffafd;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(255, 182, 193, 0.3);
+  }
+  
+  .user-info h2 {
+    color: #ff1493;
+    margin-bottom: 10px;
+  }
+  
+  .user-info p {
+    color: #555;
+    margin: 8px 0;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: #ff69b4;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #ff1493;
+  }
+  
+  .btn-danger {
+    background-color: #f08080;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #dc143c;
+  }
+  
+  .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #d3d3d3;
+  }
+  
+  .form-group {
+    margin: 15px 0;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ffc0cb;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #ff69b4;
+    outline: none;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  

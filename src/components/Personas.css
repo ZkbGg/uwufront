@@ -1,0 +1,158 @@
+.personas-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Comic Neue', cursive;
+  background-color: #fff0f6;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(255, 192, 203, 0.3);
+  border: 2px solid #ffe0eb;
+}
+
+.personas-title {
+  color: #d67ba8;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed #f7a8cd;
+}
+
+.personas-list {
+  margin-bottom: 30px;
+}
+
+.no-personas {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+}
+
+.persona-item {
+  background-color: #fff8fb;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px dashed #f9c9dd;
+  box-shadow: 0 2px 10px rgba(255, 192, 203, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.persona-item:hover {
+  transform: scale(1.02);
+}
+
+.persona-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.persona-nombre {
+  font-weight: 600;
+  font-size: 16px;
+  color: #c05788;
+}
+
+.persona-cantidad {
+  display: flex;
+  align-items: center;
+}
+
+.persona-cantidad label {
+  margin-right: 8px;
+  color: #888;
+}
+
+.cantidad-input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #fbcfe8;
+  border-radius: 8px;
+  background-color: #fff0f8;
+  text-align: center;
+  font-size: 14px;
+}
+
+.cantidad-input:focus {
+  border-color: #f472b6;
+  outline: none;
+}
+
+.add-persona-form {
+  background-color: #fff8fd;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px dashed #ffc1dc;
+  box-shadow: 0 3px 10px rgba(255, 182, 193, 0.15);
+}
+
+.add-persona-form h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #de5d9a;
+  font-size: 20px;
+  text-align: center;
+}
+
+.form-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.input-field {
+  flex: 1;
+  min-width: 130px;
+  padding: 10px;
+  border: 1px solid #ffd6e6;
+  border-radius: 10px;
+  background-color: #fff0f6;
+  font-size: 14px;
+}
+
+.input-field:focus {
+  border-color: #f472b6;
+  outline: none;
+}
+
+.add-button {
+  background-color: #f472b6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #ec4899;
+}
+
+.add-button:disabled {
+  background-color: #f9a8d4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .persona-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .persona-cantidad {
+    margin-top: 10px;
+  }
+
+  .form-inputs {
+    flex-direction: column;
+  }
+
+  .input-field {
+    width: 100%;
+  }
+}
