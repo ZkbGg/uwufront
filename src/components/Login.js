@@ -8,7 +8,7 @@ import { FaUser, FaLock, FaHeart, FaCoffee } from 'react-icons/fa';
 
 const Login = () => {
   const authContext = useContext(AuthContext);
-  const { login, error, isAuthenticated, loading } = authContext;
+  const { login, error, isAuthenticated, clearError, loading } = authContext;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -17,18 +17,41 @@ const Login = () => {
   });
   
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
 
   const { email, password } = user;
 
+  // Este efecto se ejecuta cuando cambia isAuthenticated o loading
   useEffect(() => {
-    // Log para depuración
-    console.log('Estado de autenticación:', { isAuthenticated, loading });
+    console.log('Estado de autenticación cambió:', { isAuthenticated, loading });
     
-    if (isAuthenticated && !loading) {
-      console.log('Redirigiendo a dashboard...');
+    // Solo redirigir si está autenticado y no está cargando
+    if (isAuthenticated === true && loading === false) {
+      console.log('Usuario autenticado, redirigiendo a dashboard...');
       navigate('/dashboard');
     }
-  }, [isAuthenticated, loading, navigate]);
+    
+    // Si hay un error de login y el formulario fue enviado, resetear el estado de envío
+    if (error && formSubmitted) {
+      setFormSubmitted(false);
+      setLoginFailed(true);
+      // Limpiar el error después de 3 segundos
+      setTimeout(() => {
+        clearError();
+        setLoginFailed(false);
+      }, 3000);
+    }
+  }, [isAuthenticated, loading, error, navigate, formSubmitted, clearError]);
+
+  // Este efecto se ejecuta al montar el componente
+  useEffect(() => {
+    console.log('Componente Login montado');
+    // Si ya está autenticado, redirigir inmediatamente
+    if (isAuthenticated === true) {
+      console.log('Ya autenticado al montar, redirigiendo...');
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
@@ -37,31 +60,43 @@ const Login = () => {
     
     if (email === '' || password === '') {
       alert('Por favor complete todos los campos');
-    } else {
-      console.log('Enviando formulario de login...');
-      setFormSubmitted(true);
-      
-      await login({
-        email,
-        password
-      });
-      
-      // Esperar un momento para que el estado se actualice
-      setTimeout(() => {
-        console.log('Verificando estado después de login...');
-        if (authContext.isAuthenticated) {
-          console.log('Usuario autenticado, redirigiendo...');
-          navigate('/dashboard');
-        } else {
-          console.log('Autenticación fallida');
-          setFormSubmitted(false);
-        }
-      }, 500);
+      return;
     }
+    
+    console.log('Enviando formulario de login...');
+    setFormSubmitted(true);
+    
+    // Intentar hacer login
+    await login({
+      email,
+      password
+    });
+    
+    // No necesitamos setTimeout aquí porque el useEffect se encargará de la redirección
+    // cuando isAuthenticated cambie a true
+  };
+
+  // Función para debug
+  const checkAuthStatus = () => {
+    console.log('Estado actual:', { 
+      isAuthenticated, 
+      loading, 
+      error,
+      formSubmitted,
+      user: authContext.user
+    });
   };
 
   return (
     <div className="uwu-login-container">
+      {/* Botón de debug oculto - quitar en producción */}
+      <button 
+        onClick={checkAuthStatus} 
+        style={{ position: 'absolute', top: '5px', right: '5px', fontSize: '10px' }}
+      >
+        Check Auth
+      </button>
+
       {/* Fondo con patrón */}
       <div className="uwu-background-pattern"></div>
 
@@ -91,6 +126,7 @@ const Login = () => {
                 onChange={onChange}
                 placeholder="Tu email en UwU Café"
                 required
+                disabled={formSubmitted}
               />
             </div>
           </div>
@@ -108,11 +144,16 @@ const Login = () => {
                 onChange={onChange}
                 placeholder="Tu contraseña secreta"
                 required
+                disabled={formSubmitted}
               />
             </div>
           </div>
 
-          {error && <div className="uwu-error">{error}</div>}
+          {(error || loginFailed) && (
+            <div className="uwu-error">
+              {error || 'Error al iniciar sesión. Inténtalo de nuevo.'}
+            </div>
+          )}
 
           <button 
             type="submit" 

@@ -29,7 +29,8 @@ const authReducer = (state, action) => {
         token: action.payload.token,
         isAuthenticated: true,
         loading: false,
-        user: action.payload.user || state.user
+        user: action.payload.user || state.user,
+        error: null // Asegurarse de que no haya error cuando el login es exitoso
       };
     case 'REGISTER_FAIL':
     case 'LOGIN_FAIL':
@@ -106,7 +107,10 @@ const AuthState = ({ children }) => {
       });
     } catch (err) {
       console.error('Error al cargar usuario:', err.response?.data || err.message);
-      dispatch({ type: 'AUTH_ERROR' });
+      dispatch({ 
+        type: 'AUTH_ERROR',
+        payload: err.response?.data?.msg || 'Error al cargar usuario'
+      });
     }
   };
 
@@ -174,22 +178,28 @@ const AuthState = ({ children }) => {
         setAuthToken(res.data.token);
       }
 
+      // Despachar LOGIN_SUCCESS antes de cargar usuario
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data
       });
 
-      // Carga los datos del usuario
+      // Ahora cargar los datos del usuario 
       await loadUser();
+      
+      return true; // Para poder verificar si el login fue exitoso
     } catch (err) {
       console.error('Error en login:', err.response?.data || err.message);
       dispatch({
         type: 'LOGIN_FAIL',
         payload: err.response?.data?.msg || 'Error de autenticación'
       });
+      return false; // Para saber que el login falló
     }
   };
 
+  // (El resto del código se mantiene igual)
+  
   // Actualizar perfil
   const updateProfile = async formData => {
     const config = {
