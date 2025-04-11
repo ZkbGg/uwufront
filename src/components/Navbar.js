@@ -1,17 +1,26 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, logout, user, isAdmin } = authContext; // 👈 agregamos isAdmin
+  const { isAuthenticated, logout, user, isAdmin } = authContext;
+
+  const navigate = useNavigate();
 
   const onLogout = () => {
     logout();
     navigate('/login'); // Redirige al login
   };
-  const navigate = useNavigate();
+
+  const handleTitleClick = (e) => {
+    if (isAuthenticated) {
+      e.preventDefault(); // No hace nada si está logeado
+    } else {
+      navigate('/login'); // Redirige si no está logeado
+    }
+  };
+
   const authLinks = (
     <>
       <li>Hola {user && user.name}</li>
@@ -20,10 +29,10 @@ const Navbar = () => {
       </li>
       <li>
         <Link to='/buscar'>
-      <i className="fas fa-search"></i> Consultar coins
-  </Link>
-</li>
-      {isAdmin() && ( // 👈 movido fuera del <li>
+          <i className="fas fa-search"></i> Consultar coins
+        </Link>
+      </li>
+      {isAdmin() && (
         <li>
           <Link to="/personas">Agregar Coins</Link>
         </li>
@@ -46,19 +55,18 @@ const Navbar = () => {
       </li>
       <li>
         <Link to='/buscar'>
-      <i className="fas fa-search"></i>Consultar coins
-  </Link>
-</li>
-
+          <i className="fas fa-search"></i> Consultar coins
+        </Link>
+      </li>
     </>
   );
 
   return (
     <div className="navbar">
       <h1>
-        <Link to='/login'>
+        <a href="/login" onClick={handleTitleClick}>
           <i className="fas fa-id-card-alt"></i> UwU Cafe Porteños RP
-        </Link>
+        </a>
       </h1>
       <ul>
         {isAuthenticated ? authLinks : guestLinks}
