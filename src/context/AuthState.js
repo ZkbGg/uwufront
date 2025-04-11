@@ -1,15 +1,15 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from './AuthContext';
 import './axiosConfig'; // esto aplica los interceptores automáticamente
-import { useEffect } from 'react';
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
   user: null,
-  error: null
+  error: null,
+  users: []
 };
 
 const authReducer = (state, action) => {
@@ -24,13 +24,11 @@ const authReducer = (state, action) => {
     case 'REGISTER_SUCCESS':
     case 'LOGIN_SUCCESS':
       localStorage.setItem('token', action.payload.token);
-      axios.defaults.headers.common['x-auth-token'] = action.payload.token;
       return {
         ...state,
         token: action.payload.token,
         isAuthenticated: true,
         loading: false,
-        // Si el servidor devuelve user en el payload, actualizamos el estado
         user: action.payload.user || state.user
       };
     case 'REGISTER_FAIL':
@@ -66,50 +64,65 @@ const authReducer = (state, action) => {
 const AuthState = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      setAuthToken(localStorage.getItem('token'));
-      loadUser(); // 👈 esto hace la llamada inicial
-    } else {
-      dispatch({ type: 'AUTH_ERROR' }); // 👈 esto detiene el loading si no hay token
-    }
-  }, []);
-  
-
   // Configurar headers
   const setAuthToken = token => {
     if (token) {
       if (token.length > 1000) {
         console.warn('Token demasiado largo, puede causar problemas');
+        return false;
       }
       axios.defaults.headers.common['x-auth-token'] = token;
+      return true;
     } else {
       delete axios.defaults.headers.common['x-auth-token'];
+      return false;
     }
   };
 
   // Cargar usuario
   const loadUser = async () => {
-    if (!localStorage.token || localStorage.token.length > 1000) {
-      console.warn('Token inválido o muy largo, no se carga usuario');
-      
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No hay token, no se puede cargar usuario');
+      dispatch({ type: 'AUTH_ERROR' });
       return;
     }
     
-    
-      axios.defaults.headers.common['x-auth-token'] = localStorage.token;
+    const tokenSet = setAuthToken(token);
+    if (!tokenSet) {
+      console.log('Token inválido, no se puede cargar usuario');
+      dispatch({ type: 'AUTH_ERROR' });
+      return;
+    }
 
     try {
+      console.log('Intentando cargar usuario...');
       const res = await axios.get('/api/auth/user');
+      console.log('Usuario cargado:', res.data);
 
       dispatch({
         type: 'USER_LOADED',
         payload: res.data
       });
     } catch (err) {
+      console.error('Error al cargar usuario:', err.response?.data || err.message);
       dispatch({ type: 'AUTH_ERROR' });
     }
   };
+
+  // Efecto inicial para cargar usuario si hay token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log('Token en inicio de aplicación:', token);
+    
+    if (token) {
+      setAuthToken(token);
+      loadUser();
+    } else {
+      dispatch({ type: 'AUTH_ERROR' });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   // Registrar usuario
   const register = async formData => {
@@ -120,8 +133,9 @@ const AuthState = ({ children }) => {
     };
   
     try {
-        console.log('Headers actuales:', axios.defaults.headers);
+      console.log('Intentando registrar usuario:', formData.email);
       const res = await axios.post('/api/auth/register', formData, config);
+      console.log('Registro exitoso, respuesta:', res.data);
   
       dispatch({
         type: 'REGISTER_SUCCESS',
@@ -129,11 +143,11 @@ const AuthState = ({ children }) => {
       });
   
       if (res.data.token) {
-      // Configurar token antes de llamar a loadUser
-      setAuthToken(res.data.token);
-      loadUser(); // 👈 Solo después de setear correctamente el token
-    }
+        setAuthToken(res.data.token);
+        loadUser();
+      }
     } catch (err) {
+      console.error('Error en registro:', err.response?.data || err.message);
       dispatch({
         type: 'REGISTER_FAIL',
         payload: err.response?.data?.msg || 'Error al registrar'
@@ -150,17 +164,25 @@ const AuthState = ({ children }) => {
     };
 
     try {
+      console.log('Intentando login con:', formData.email);
       const res = await axios.post('/api/auth/login', formData, config);
+      console.log('Login exitoso, respuesta:', res.data);
 
-      console.log('LOGIN RESPONSE:', res.data); // 👈 Asegúrate que tenga token
+      // Almacena el token inmediatamente
+      if (res.data && res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        setAuthToken(res.data.token);
+      }
 
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data
       });
 
-      loadUser();
+      // Carga los datos del usuario
+      await loadUser();
     } catch (err) {
+      console.error('Error en login:', err.response?.data || err.message);
       dispatch({
         type: 'LOGIN_FAIL',
         payload: err.response?.data?.msg || 'Error de autenticación'

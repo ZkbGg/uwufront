@@ -1,41 +1,62 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext'; // o el path correcto a `authState.js`
+import AuthContext from '../context/AuthContext';
 import './Uwulogin.css';
 
 // Puedes instalar estos iconos con: npm install react-icons
-// O reemplazarlos por imágenes si prefieres
 import { FaUser, FaLock, FaHeart, FaCoffee } from 'react-icons/fa';
 
 const Login = () => {
   const authContext = useContext(AuthContext);
-  const { login, error, isAuthenticated } = authContext;
+  const { login, error, isAuthenticated, loading } = authContext;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
 
   const [user, setUser] = useState({
     email: '',
     password: ''
   });
+  
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const { email, password } = user;
 
+  useEffect(() => {
+    // Log para depuración
+    console.log('Estado de autenticación:', { isAuthenticated, loading });
+    
+    if (isAuthenticated && !loading) {
+      console.log('Redirigiendo a dashboard...');
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, loading, navigate]);
+
   const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
+    
     if (email === '' || password === '') {
       alert('Por favor complete todos los campos');
     } else {
-      login({
+      console.log('Enviando formulario de login...');
+      setFormSubmitted(true);
+      
+      await login({
         email,
         password
       });
+      
+      // Esperar un momento para que el estado se actualice
+      setTimeout(() => {
+        console.log('Verificando estado después de login...');
+        if (authContext.isAuthenticated) {
+          console.log('Usuario autenticado, redirigiendo...');
+          navigate('/dashboard');
+        } else {
+          console.log('Autenticación fallida');
+          setFormSubmitted(false);
+        }
+      }, 500);
     }
   };
 
@@ -93,8 +114,18 @@ const Login = () => {
 
           {error && <div className="uwu-error">{error}</div>}
 
-          <button type="submit" className="uwu-submit-button">
-            <FaHeart className="uwu-button-icon" /> Entrar al UwU Café
+          <button 
+            type="submit" 
+            className="uwu-submit-button"
+            disabled={formSubmitted}
+          >
+            {formSubmitted ? (
+              'Accediendo...'
+            ) : (
+              <>
+                <FaHeart className="uwu-button-icon" /> Entrar al UwU Café
+              </>
+            )}
           </button>
 
           <div className="uwu-footer">
