@@ -63,11 +63,16 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <h1>
-        <a href="/login" onClick={handleTitleClick}>
-          <i className="fas fa-id-card-alt"></i> UwU Cafe Porteños RP
-        </a>
-      </h1>
+<h1>
+  <Link to="/login" onClick={(e) => {
+    if (isAuthenticated) {
+      e.preventDefault(); // Cancelar navegación si está logeado
+    }
+  }}>
+    <i className="fas fa-id-card-alt"></i> UwU Cafe Porteños RP
+  </Link>
+</h1>
+
       <ul>
         {isAuthenticated ? authLinks : guestLinks}
       </ul>
