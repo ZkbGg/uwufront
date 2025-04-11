@@ -17,41 +17,29 @@ const Login = () => {
   });
   
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [loginFailed, setLoginFailed] = useState(false);
+  const [loginAttempt, setLoginAttempt] = useState(false);
 
   const { email, password } = user;
 
-  // Este efecto se ejecuta cuando cambia isAuthenticated o loading
+  // Limpiar errores al montar el componente
   useEffect(() => {
-    console.log('Estado de autenticación cambió:', { isAuthenticated, loading });
-    
-    // Solo redirigir si está autenticado y no está cargando
-    if (isAuthenticated === true && loading === false) {
+    clearError();
+    // eslint-disable-next-line
+  }, []);
+
+  // Este efecto maneja la redirección después de autenticación exitosa
+  useEffect(() => {
+    // Solo redirigir si está autenticado y se ha intentado iniciar sesión
+    if (isAuthenticated === true && loginAttempt) {
       console.log('Usuario autenticado, redirigiendo a dashboard...');
       navigate('/dashboard');
     }
-    
-    // Si hay un error de login y el formulario fue enviado, resetear el estado de envío
+
+    // Resetear formSubmitted si hay un error
     if (error && formSubmitted) {
       setFormSubmitted(false);
-      setLoginFailed(true);
-      // Limpiar el error después de 3 segundos
-      setTimeout(() => {
-        clearError();
-        setLoginFailed(false);
-      }, 3000);
     }
-  }, [isAuthenticated, loading, error, navigate, formSubmitted, clearError]);
-
-  // Este efecto se ejecuta al montar el componente
-  useEffect(() => {
-    console.log('Componente Login montado');
-    // Si ya está autenticado, redirigir inmediatamente
-    if (isAuthenticated === true) {
-      console.log('Ya autenticado al montar, redirigiendo...');
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, loginAttempt, navigate, error, formSubmitted]);
 
   const onChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
@@ -63,40 +51,23 @@ const Login = () => {
       return;
     }
     
-    console.log('Enviando formulario de login...');
     setFormSubmitted(true);
+    setLoginAttempt(true);
     
     // Intentar hacer login
-    await login({
+    const success = await login({
       email,
       password
     });
     
-    // No necesitamos setTimeout aquí porque el useEffect se encargará de la redirección
-    // cuando isAuthenticated cambie a true
-  };
-
-  // Función para debug
-  const checkAuthStatus = () => {
-    console.log('Estado actual:', { 
-      isAuthenticated, 
-      loading, 
-      error,
-      formSubmitted,
-      user: authContext.user
-    });
+    // Si login falló, resetear formSubmitted
+    if (!success) {
+      setFormSubmitted(false);
+    }
   };
 
   return (
     <div className="uwu-login-container">
-      {/* Botón de debug oculto - quitar en producción */}
-      <button 
-        onClick={checkAuthStatus} 
-        style={{ position: 'absolute', top: '5px', right: '5px', fontSize: '10px' }}
-      >
-        Check Auth
-      </button>
-
       {/* Fondo con patrón */}
       <div className="uwu-background-pattern"></div>
 
@@ -149,9 +120,9 @@ const Login = () => {
             </div>
           </div>
 
-          {(error || loginFailed) && (
+          {error && (
             <div className="uwu-error">
-              {error || 'Error al iniciar sesión. Inténtalo de nuevo.'}
+              {error}
             </div>
           )}
 

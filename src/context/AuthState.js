@@ -19,7 +19,8 @@ const authReducer = (state, action) => {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: action.payload
+        user: action.payload,
+        error: null
       };
     case 'REGISTER_SUCCESS':
     case 'LOGIN_SUCCESS':
@@ -30,11 +31,29 @@ const authReducer = (state, action) => {
         isAuthenticated: true,
         loading: false,
         user: action.payload.user || state.user,
-        error: null // Asegurarse de que no haya error cuando el login es exitoso
+        error: null
       };
     case 'REGISTER_FAIL':
     case 'LOGIN_FAIL':
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
+        error: action.payload
+      };
     case 'AUTH_ERROR':
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
+        error: action.payload // Puede ser null para evitar mensajes innecesarios
+      };
     case 'LOGOUT':
     case 'DELETE_ACCOUNT':
       localStorage.removeItem('token');
@@ -44,7 +63,7 @@ const authReducer = (state, action) => {
         isAuthenticated: false,
         loading: false,
         user: null,
-        error: action.payload
+        error: null
       };
     case 'CLEAR_ERROR':
       return {
@@ -85,14 +104,20 @@ const AuthState = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('No hay token, no se puede cargar usuario');
-      dispatch({ type: 'AUTH_ERROR' });
+      dispatch({ 
+        type: 'AUTH_ERROR',
+        payload: null // No mostrar error si simplemente no hay token
+      });
       return;
     }
     
     const tokenSet = setAuthToken(token);
     if (!tokenSet) {
       console.log('Token inválido, no se puede cargar usuario');
-      dispatch({ type: 'AUTH_ERROR' });
+      dispatch({ 
+        type: 'AUTH_ERROR',
+        payload: null // No mostrar error por token inválido al inicio
+      });
       return;
     }
 
@@ -109,7 +134,7 @@ const AuthState = ({ children }) => {
       console.error('Error al cargar usuario:', err.response?.data || err.message);
       dispatch({ 
         type: 'AUTH_ERROR',
-        payload: err.response?.data?.msg || 'Error al cargar usuario'
+        payload: null // No mostrar error de autenticación al inicio
       });
     }
   };
@@ -123,7 +148,11 @@ const AuthState = ({ children }) => {
       setAuthToken(token);
       loadUser();
     } else {
-      dispatch({ type: 'AUTH_ERROR' });
+      // No mostrar error si no hay token, simplemente establecer isAuthenticated en false
+      dispatch({ 
+        type: 'AUTH_ERROR',
+        payload: null // Sin mensaje de error
+      });
     }
     // eslint-disable-next-line
   }, []);
@@ -146,16 +175,16 @@ const AuthState = ({ children }) => {
         payload: res.data
       });
   
-      if (res.data.token) {
-        setAuthToken(res.data.token);
-        loadUser();
-      }
+      setAuthToken(res.data.token);
+      
+      return true;
     } catch (err) {
       console.error('Error en registro:', err.response?.data || err.message);
       dispatch({
         type: 'REGISTER_FAIL',
         payload: err.response?.data?.msg || 'Error al registrar'
       });
+      return false;
     }
   };
 
@@ -172,34 +201,31 @@ const AuthState = ({ children }) => {
       const res = await axios.post('/api/auth/login', formData, config);
       console.log('Login exitoso, respuesta:', res.data);
 
-      // Almacena el token inmediatamente
-      if (res.data && res.data.token) {
-        localStorage.setItem('token', res.data.token);
-        setAuthToken(res.data.token);
+      if (!res.data || !res.data.token) {
+        throw new Error('Respuesta de servidor inválida - no hay token');
       }
 
-      // Despachar LOGIN_SUCCESS antes de cargar usuario
+      // Establecer el token en localStorage y en los headers
+      localStorage.setItem('token', res.data.token);
+      setAuthToken(res.data.token);
+
+      // Despachar LOGIN_SUCCESS
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data
       });
-
-      // Ahora cargar los datos del usuario 
-      await loadUser();
       
-      return true; // Para poder verificar si el login fue exitoso
+      return true;
     } catch (err) {
       console.error('Error en login:', err.response?.data || err.message);
       dispatch({
         type: 'LOGIN_FAIL',
         payload: err.response?.data?.msg || 'Error de autenticación'
       });
-      return false; // Para saber que el login falló
+      return false;
     }
   };
 
-  // (El resto del código se mantiene igual)
-  
   // Actualizar perfil
   const updateProfile = async formData => {
     const config = {
